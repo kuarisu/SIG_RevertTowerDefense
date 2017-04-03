@@ -9,15 +9,18 @@ public class Car_Driving : StateMachineBehaviour {
 
     Transform m_TargetPosition;
     NavMeshAgent m_Agent;
-    int m_indexOfNextTarget = 0;
-    int m_currentIndexOfNextTarget = 0;
+    int m_indexOfNextTarget;
+    int m_currentIndexOfNextTarget;
     bool m_HasArrivedDestination;
     float m_DistanceToDestination;
+
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        m_currentIndexOfNextTarget = m_indexOfNextTarget;
+        Debug.Log("hello" + m_currentIndexOfNextTarget);
+        m_indexOfNextTarget = m_currentIndexOfNextTarget;
+        Debug.Log("hefdgdgello" + m_indexOfNextTarget);
         SetTarget(m_ListOfKeyPoints[m_currentIndexOfNextTarget].transform);
     }
 
@@ -27,18 +30,17 @@ public class Car_Driving : StateMachineBehaviour {
         m_Agent.destination = m_TargetPosition.position;
         m_DistanceToDestination = Vector3.Distance(m_TargetPosition.position, m_Agent.transform.position);
 
-        if (m_DistanceToDestination < 3)
+        if (m_DistanceToDestination < 5)
         {
 
             if (m_indexOfNextTarget < (m_ListOfKeyPoints.Count - 1))
             {
+              
                 SetTarget(m_ListOfKeyPoints[m_indexOfNextTarget].transform);
                 m_indexOfNextTarget++;
-            }
-            else if (m_indexOfNextTarget == m_ListOfKeyPoints.Count - 1)
-            {
-                SetTarget(m_ListOfKeyPoints[m_indexOfNextTarget].transform);
-                m_indexOfNextTarget = 0;
+                m_currentIndexOfNextTarget = m_indexOfNextTarget;
+                Debug.Log("goodbye" + m_currentIndexOfNextTarget);
+                Debug.Log("gsdffeggoodbye" + m_indexOfNextTarget);
             }
         }
 
@@ -56,6 +58,7 @@ public class Car_Driving : StateMachineBehaviour {
     }
     public void SetTarget(Transform _newPos)
     {
+
         m_TargetPosition = _newPos;
     }
 
