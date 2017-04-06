@@ -17,7 +17,7 @@ public class Car_SelfManagement : MonoBehaviour {
         m_Agent = this.GetComponent<NavMeshAgent>();
 
         m_An = this.GetComponent<Animator>();
-        m_An.GetBehaviour<Car_Driving>().SetKeyPointsPos(Manager_PatrolList.Instance.m_ListOfWaypoints);
+        m_An.GetBehaviour<Car_Driving>().SetKeyPointsPos(Manager_ObjectsPosition.Instance.m_ListOfWaypoints);
         m_An.GetBehaviour<Car_Driving>().SetAgent(m_Agent);
 
     }

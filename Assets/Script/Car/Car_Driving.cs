@@ -13,36 +13,31 @@ public class Car_Driving : StateMachineBehaviour {
     int m_currentIndexOfNextTarget;
     bool m_HasArrivedDestination;
     float m_DistanceToDestination;
+    bool m_IsClose = false;
 
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        Debug.Log("hello" + m_currentIndexOfNextTarget);
         m_indexOfNextTarget = m_currentIndexOfNextTarget;
-        Debug.Log("hefdgdgello" + m_indexOfNextTarget);
         SetTarget(m_ListOfKeyPoints[m_currentIndexOfNextTarget].transform);
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+
         m_Agent.destination = m_TargetPosition.position;
         m_DistanceToDestination = Vector3.Distance(m_TargetPosition.position, m_Agent.transform.position);
 
         if (m_DistanceToDestination < 5)
         {
-
-            if (m_indexOfNextTarget < (m_ListOfKeyPoints.Count - 1))
-            {
-              
-                SetTarget(m_ListOfKeyPoints[m_indexOfNextTarget].transform);
-                m_indexOfNextTarget++;
-                m_currentIndexOfNextTarget = m_indexOfNextTarget;
-                Debug.Log("goodbye" + m_currentIndexOfNextTarget);
-                Debug.Log("gsdffeggoodbye" + m_indexOfNextTarget);
-            }
+            m_IsClose = true;
+            m_indexOfNextTarget++;
+            m_currentIndexOfNextTarget = m_indexOfNextTarget;
+            SetTarget(m_ListOfKeyPoints[m_indexOfNextTarget].transform);
         }
+
 
     }
 
