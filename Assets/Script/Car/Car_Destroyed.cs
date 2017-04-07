@@ -19,6 +19,7 @@ public class Car_Destroyed : StateMachineBehaviour {
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        Manager_Objects.Instance.RemoveVehicle(m_Vehicle);
         Destroy(m_Vehicle);
     }
 

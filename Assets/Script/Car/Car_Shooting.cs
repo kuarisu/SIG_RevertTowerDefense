@@ -4,15 +4,22 @@ using UnityEngine;
 
 public class Car_Shooting : StateMachineBehaviour {
 
+
+    float m_SpeedRotation;
+    GameObject m_DynamicVisual;
+    GameObject m_Target;
+    Quaternion m_Orientation;
+
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     //override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
     //
     //}
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
-    //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-    //
-    //}
+    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        m_DynamicVisual.transform.localRotation = Quaternion.Slerp(m_DynamicVisual.transform.localRotation, m_Orientation, m_SpeedRotation * Time.deltaTime);
+    }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     //override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
@@ -28,4 +35,16 @@ public class Car_Shooting : StateMachineBehaviour {
     //override public void OnStateIK(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
     //
     //}
+
+
+    public void SetParameters(float _speedRotation, GameObject _dynamicVisual)
+    {
+        m_SpeedRotation = _speedRotation;
+        m_DynamicVisual = _dynamicVisual;
+    }
+
+    public void SetOrientation(Quaternion _orientation)
+    {
+        m_Orientation = _orientation;
+    }
 }

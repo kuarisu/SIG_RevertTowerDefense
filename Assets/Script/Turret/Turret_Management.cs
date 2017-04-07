@@ -5,7 +5,7 @@ using UnityEngine;
 public class Turret_Management : MonoBehaviour {
 
     [SerializeField]
-    SphereCollider m_DetectionZone;
+    BoxCollider m_DetectionZone;
 
     [SerializeField]
     List<GameObject> m_ListTargetedVehicle = new List<GameObject>();
@@ -82,7 +82,7 @@ public class Turret_Management : MonoBehaviour {
         int _i = 0;
         foreach (GameObject Vehicle in m_ListTargetedVehicle.ToArray())
         {
-            if(_gameObject.transform.root.name == Vehicle.transform.name)
+            if (_gameObject.transform.root.name == Vehicle.transform.name)
             {
                 m_ListTargetedVehicle.RemoveAt(_i);
 
@@ -91,8 +91,12 @@ public class Turret_Management : MonoBehaviour {
                     StartIddleBehavior();
                     m_TurretIsShooting = false;
                 }
+                break;
             }
-            _i++;
+            else
+            {
+                _i++;
+            }
         }
 
     }

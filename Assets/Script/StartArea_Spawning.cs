@@ -9,19 +9,24 @@ public class StartArea_Spawning : MonoBehaviour {
     [SerializeField]
     GameObject m_VehicleToSpawn;
 
-    [SerializeField]
-    float m_MaxNbOfVehicle;
+
 
 	// Use this for initialization
 	void Start () {
-		
+        StartCoroutine(SpawnNewVehicle());
 	}
 	
     IEnumerator SpawnNewVehicle()
     {
+        int _i = 0;
         while (true)
         {
-            yield return null;
+            GameObject _vehicleClone = (GameObject)Instantiate(m_VehicleToSpawn, transform.position, transform.rotation);
+            _vehicleClone.transform.name = _vehicleClone.transform.name + " " + _i;
+            _i++;
+
+            Manager_Objects.Instance.AddVehicle(_vehicleClone);
+            yield return new WaitForSeconds(m_RateOfSpawning);
         }
     }
 }
