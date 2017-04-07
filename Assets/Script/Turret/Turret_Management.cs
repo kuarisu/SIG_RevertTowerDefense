@@ -31,10 +31,17 @@ public class Turret_Management : MonoBehaviour {
 
     private void Update()
     {
-        if(m_TurretIsShooting)
+        if(m_TurretIsShooting && m_ListTargetedVehicle.Count > 0)
         {
-            m_Orientation = Quaternion.LookRotation(m_ListTargetedVehicle[0].transform.position - transform.position);
-            m_An.GetBehaviour<Turret_Shooting>().SetOrientation(m_Orientation);
+            if (m_ListTargetedVehicle[0] == null)
+            {
+                m_ListTargetedVehicle.RemoveAt(0);
+            }
+            else
+            {
+                m_Orientation = Quaternion.LookRotation(m_ListTargetedVehicle[0].transform.position - transform.position);
+                m_An.GetBehaviour<Turret_Shooting>().SetOrientation(m_Orientation);
+            }
         }
     }
 
@@ -82,6 +89,7 @@ public class Turret_Management : MonoBehaviour {
                 if (m_ListTargetedVehicle.Count == 0)
                 {
                     StartIddleBehavior();
+                    m_TurretIsShooting = false;
                 }
             }
             _i++;
