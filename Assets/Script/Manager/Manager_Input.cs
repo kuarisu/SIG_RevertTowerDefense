@@ -32,8 +32,7 @@ public class Manager_Input : MonoBehaviour {
 
             if (Physics.Raycast(_ray, out _hit))
             {
-                Debug.Log(_hit.collider.transform.root.gameObject.tag);
-                if(_hit.collider.transform.root.gameObject.tag == "Turret")
+                if(_hit.collider.transform.root.gameObject.tag == "Obstacle")
                 {
                     m_Target = _hit.collider.transform.root.gameObject;
                     foreach (GameObject _vehicle in Manager_Objects.Instance.m_ListOfVehicle)

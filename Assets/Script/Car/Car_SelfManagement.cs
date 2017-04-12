@@ -14,7 +14,17 @@ public class Car_SelfManagement : MonoBehaviour {
     [SerializeField]
     float m_SpeedRotation;
 
+    [SerializeField]
+    GameObject m_BulletSpawner;
+
+    [SerializeField]
+    GameObject m_Bullet;
+
+    [SerializeField]
+    float m_DistanceToRoadBlock;
+
     bool m_IsShooting = false;
+    bool m_HasTarget;
     Quaternion m_Orientation;
 
     Animator m_An;
@@ -23,9 +33,8 @@ public class Car_SelfManagement : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
+        
         m_Agent = this.GetComponent<NavMeshAgent>();
-
         m_An = this.GetComponent<Animator>();
         m_An.GetBehaviour<Car_Driving>().SetKeyPointsPos(Manager_Objects.Instance.m_ListOfWaypoints);
         m_An.GetBehaviour<Car_Driving>().SetAgent(m_Agent);
@@ -37,11 +46,22 @@ public class Car_SelfManagement : MonoBehaviour {
 
     private void Update()
     {
-        if(m_IsShooting)
+        if(m_IsShooting && !m_HasTarget)
         {
             m_Orientation = Quaternion.LookRotation(Manager_Input.Instance.m_Target.transform.position - transform.position);
             m_An.GetBehaviour<Car_Shooting>().SetOrientation(m_Orientation);
+            m_HasTarget = true;
         }
+
+        if (Manager_Objects.Instance.m_RoadBlock != null && Vector3.Distance(this.transform.position, Manager_Objects.Instance.m_RoadBlock.transform.position) < m_DistanceToRoadBlock)
+        {
+            m_Agent.isStopped = true;
+        }
+        else if (m_An.GetBool("m_Driving"))
+        {
+            m_Agent.isStopped = false;
+        }
+
 
         if(Input.GetKeyUp("q"))
         {
@@ -68,7 +88,8 @@ public class Car_SelfManagement : MonoBehaviour {
 
         m_IsShooting = false;
         m_Agent.isStopped = false;
-        m_Agent.speed = m_DrivingSpeed;            
+        m_Agent.speed = m_DrivingSpeed;
+        m_HasTarget = false;
 
 
     }
@@ -80,7 +101,9 @@ public class Car_SelfManagement : MonoBehaviour {
         m_An.SetBool("m_Driving", false);
 
         m_IsShooting = true;
+        m_Agent.velocity = Vector3.zero;
         m_Agent.isStopped = true;
+        m_Agent.destination = transform.position;
     }
 
     public void DestroyedBehavior()             
@@ -92,6 +115,7 @@ public class Car_SelfManagement : MonoBehaviour {
         m_An.GetBehaviour<Car_Destroyed>().SetVehicle(this.gameObject.transform.root.gameObject);
 
         m_IsShooting = false;
+        m_Agent.velocity = Vector3.zero;
         m_Agent.isStopped = true;
     }
 
@@ -103,14 +127,25 @@ public class Car_SelfManagement : MonoBehaviour {
 
     }
 
+    public void OnColliderEnter (Collision col)
+    {
+        if(col.collider.tag == "BulletTurret")
+        {
+            LooseHealthPoint();
+        }
+    }
+
     public void PrepareShooting()
     {
         if(Vector3.Distance(this.transform.position, Manager_Input.Instance.m_Target.transform.position) < m_DistanceToTarget)
         {
-            if (true)
+            Vector3 _Direction = this.transform.position - Manager_Input.Instance.m_Target.transform.position;
+            if (Vector3.Dot(Manager_Input.Instance.m_Target.transform.forward, _Direction) < 0)
             {
                 FiringBehavior();
             }
         }
     }
+
+
 }
