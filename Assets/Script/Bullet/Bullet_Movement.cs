@@ -16,7 +16,7 @@ public class Bullet_Movement : MonoBehaviour {
     }
 
 	// Update is called once per frame
-	void LateUpdate () {
+	void FixedUpdate () {
         transform.Translate(Vector3.forward * Time.deltaTime * m_Speed);
 
     }

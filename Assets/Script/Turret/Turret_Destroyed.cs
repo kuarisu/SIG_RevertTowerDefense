@@ -19,7 +19,7 @@ public class Turret_Destroyed : StateMachineBehaviour {
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        Manager_Objects.Instance.RemoveVehicle(m_Turret);
+        Manager_Input.Instance.m_Target = null;
         Destroy(m_Turret);
     }
 

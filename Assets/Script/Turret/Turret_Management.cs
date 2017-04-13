@@ -145,13 +145,6 @@ public class Turret_Management : MonoBehaviour {
 
     }
 
-    public void OnColliderEnter(Collision col)
-    {
-        if (col.collider.tag == "BulletCar")
-        {
-            LooseHealthPoint();
-        }
-    }
 
     IEnumerator InstantiateBullet()
     {
@@ -163,6 +156,17 @@ public class Turret_Management : MonoBehaviour {
         }
         yield break;
 
+    }
+
+
+
+    void OnCollisionEnter(Collision col)
+    {
+        if (col.collider.transform.root.transform.tag == "BulletCar")
+        { 
+                LooseHealthPoint();
+            Destroy(col.transform.root.gameObject);
+        }
     }
 
 }

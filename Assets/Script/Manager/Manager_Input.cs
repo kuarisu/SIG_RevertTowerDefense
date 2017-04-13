@@ -4,10 +4,17 @@ using UnityEngine;
 
 public class Manager_Input : MonoBehaviour {
 
-    [HideInInspector]
     public GameObject m_Target;
 
+    public float m_NewCameraPosition;
+
+    [SerializeField]
+    GameObject m_MainCamera;
+
+
     public static Manager_Input Instance;
+
+   
 
     private void Awake()
     {
@@ -39,6 +46,12 @@ public class Manager_Input : MonoBehaviour {
                     {
                         _vehicle.GetComponent<Car_SelfManagement>().PrepareShooting();
                     }
+                }
+                if (_hit.collider.transform.root.gameObject.tag != "Obstacle")
+                {
+                    m_NewCameraPosition = _hit.point.x;
+                    m_MainCamera.GetComponent<Camera_Follow>().GoNewPosition();
+
                 }
 
             }

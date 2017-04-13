@@ -52,6 +52,11 @@ public class Car_SelfManagement : MonoBehaviour {
             m_An.GetBehaviour<Car_Shooting>().SetOrientation(m_Orientation);
             m_HasTarget = true;
         }
+        else if(m_IsShooting && m_HasTarget && Manager_Input.Instance.m_Target == null)
+        {
+            DrivingBehavior();
+        }
+
 
         if (Manager_Objects.Instance.m_RoadBlock != null && Vector3.Distance(this.transform.position, Manager_Objects.Instance.m_RoadBlock.transform.position) < m_DistanceToRoadBlock)
         {
@@ -60,22 +65,6 @@ public class Car_SelfManagement : MonoBehaviour {
         else if (m_An.GetBool("m_Driving"))
         {
             m_Agent.isStopped = false;
-        }
-
-
-        if(Input.GetKeyUp("q"))
-        {
-            DrivingBehavior();
-        }
-
-        if(Input.GetKeyUp("d"))
-        {
-            FiringBehavior();
-        }
-
-        if (Input.GetKeyUp("z"))
-        {
-            DestroyedBehavior();
         }
     }
 
@@ -104,6 +93,7 @@ public class Car_SelfManagement : MonoBehaviour {
         m_Agent.velocity = Vector3.zero;
         m_Agent.isStopped = true;
         m_Agent.destination = transform.position;
+        StartCoroutine(InstantiateBullet());
     }
 
     public void DestroyedBehavior()             
@@ -137,15 +127,39 @@ public class Car_SelfManagement : MonoBehaviour {
 
     public void PrepareShooting()
     {
+        Debug.Log("hello");
         if(Vector3.Distance(this.transform.position, Manager_Input.Instance.m_Target.transform.position) < m_DistanceToTarget)
         {
             Vector3 _Direction = this.transform.position - Manager_Input.Instance.m_Target.transform.position;
-            if (Vector3.Dot(Manager_Input.Instance.m_Target.transform.forward, _Direction) < 0)
+            if (Vector3.Dot(Manager_Input.Instance.m_Target.transform.forward, _Direction) < 0 && !m_IsShooting)
             {
                 FiringBehavior();
             }
         }
     }
 
+    IEnumerator InstantiateBullet()
+    {
+        while (m_IsShooting)
+        {
+            yield return new WaitForSeconds(0.418f);
+            GameObject _bullet = (GameObject)Instantiate(m_Bullet, m_BulletSpawner.transform.position, transform.rotation);
+            yield return new WaitForSeconds(0.585f);
+        }
+        yield break;
+
+    }
+
+
+    void OnCollisionEnter(Collision col)
+    {
+        if (col.collider.transform.root.transform.tag == "BulletTurret")
+        {
+            LooseHealthPoint();
+            Destroy(col.transform.root.gameObject);
+        }
+
+
+    }
 
 }
