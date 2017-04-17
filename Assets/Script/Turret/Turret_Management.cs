@@ -105,9 +105,9 @@ public class Turret_Management : MonoBehaviour {
         //This function is used to start the iddle behavior. It sets all the bool required to switch state. The turret is not shooting, it sends the orientation to go back to its initial rotation.
     void StartIddleBehavior()
     {
-        m_TurretIsShooting = false;
         m_An.SetBool("IsShooting", false);
         m_An.GetBehaviour<Turret_Iddle>().SetOrientation(m_InitialOritention);
+        m_TurretIsShooting = false;
     }
 
         //This function is used to start the destruction behavior. It sets all the bool required to switch state. The turret is not shooting, it sends the right gameobject to be destroyed.
