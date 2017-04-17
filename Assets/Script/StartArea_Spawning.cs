@@ -4,18 +4,20 @@ using UnityEngine;
 
 public class StartArea_Spawning : MonoBehaviour {
 
+        //The time between the spawn of vehicles. If set to 0, no new vehicle will spawn
     [SerializeField]
     float m_RateOfSpawning;
+
+        //The prefab of vehicle to instantiate
     [SerializeField]
     GameObject m_VehicleToSpawn;
 
 
-
-	// Use this for initialization
 	void Start () {
         StartCoroutine(SpawnNewVehicle());
 	}
 	
+        //This coroutine will spawn a new vehicule after a delay and add the new vehicle to the game manager list of vehicle    
     IEnumerator SpawnNewVehicle()
     {
         int _i = 0;

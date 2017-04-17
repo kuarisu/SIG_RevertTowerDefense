@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class Turret_Iddle : StateMachineBehaviour {
 
+        //The gameObjet that rotates
     GameObject m_DynamicVisual;
+        //The initial orientation of the turret. It's set at the start
     Quaternion m_OrientationToInitial;
+        //The speed of the rotation
     float m_SpeedRotation;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
@@ -16,6 +19,7 @@ public class Turret_Iddle : StateMachineBehaviour {
     //OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        //This rotation brings back the turret to its initial orientation
         m_DynamicVisual.transform.localRotation = Quaternion.Slerp(m_DynamicVisual.transform.localRotation, m_OrientationToInitial, m_SpeedRotation * Time.deltaTime);
     }
 
@@ -35,6 +39,7 @@ public class Turret_Iddle : StateMachineBehaviour {
     //
     //}
 
+            //The two functions are used to set several parameters
     public void SetParameters(float _speedRotation, GameObject _dynamicVisual)
     {
         m_SpeedRotation = _speedRotation;

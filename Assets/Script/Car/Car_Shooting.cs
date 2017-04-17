@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class Car_Shooting : StateMachineBehaviour {
 
-
+        //Speed of the vehicle's rotation
     float m_SpeedRotation;
+        //The gameObject that rotates
     GameObject m_DynamicVisual;
-    GameObject m_Target;
+        //The orientation the gameobject will reach
     Quaternion m_Orientation;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
@@ -18,6 +19,7 @@ public class Car_Shooting : StateMachineBehaviour {
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+            //The gameobject rotates toward the set orientation using a slerp
         m_DynamicVisual.transform.localRotation = Quaternion.Slerp(m_DynamicVisual.transform.localRotation, m_Orientation, m_SpeedRotation * Time.deltaTime);
     }
 
@@ -36,13 +38,13 @@ public class Car_Shooting : StateMachineBehaviour {
     //
     //}
 
-
+        //This function is used to set several parameters 
     public void SetParameters(float _speedRotation, GameObject _dynamicVisual)
     {
         m_SpeedRotation = _speedRotation;
         m_DynamicVisual = _dynamicVisual;
     }
-
+        //This function is called to set the new orientation toward the vehicle's target
     public void SetOrientation(Quaternion _orientation)
     {
         m_Orientation = _orientation;

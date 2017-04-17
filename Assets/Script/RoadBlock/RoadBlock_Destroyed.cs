@@ -19,6 +19,7 @@ public class RoadBlock_Destroyed : StateMachineBehaviour {
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+            //Before destroying the RoadBlock, the reference inside the game manager is set to null 
         Manager_Objects.Instance.m_RoadBlock = null;
         Destroy(m_RoadBlock);
     }
@@ -33,6 +34,7 @@ public class RoadBlock_Destroyed : StateMachineBehaviour {
     //
     //}
 
+         //Use to set the reference of the RoadBlock
     public void SetRoadBlock(GameObject _roadBlock)
     {
         m_RoadBlock = _roadBlock;

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Turret_Destroyed : StateMachineBehaviour {
 
+        //GameObjet to be destroyed
     GameObject m_Turret;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
@@ -19,6 +20,7 @@ public class Turret_Destroyed : StateMachineBehaviour {
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+            //Before destroying the turret, the game manager's reference to this turret is set to null
         Manager_Input.Instance.m_Target = null;
         Destroy(m_Turret);
     }
@@ -33,6 +35,7 @@ public class Turret_Destroyed : StateMachineBehaviour {
     //
     //}
 
+            //Set the right gameObject to destroy
     public void SetTurret(GameObject _turret)
     {
         m_Turret = _turret;

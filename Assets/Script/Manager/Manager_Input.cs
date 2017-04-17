@@ -4,14 +4,17 @@ using UnityEngine;
 
 public class Manager_Input : MonoBehaviour {
 
+        //Reference of the vehicles target
+    [HideInInspector]
     public GameObject m_Target;
-
+        //New position for the camera
+    [HideInInspector]
     public float m_NewCameraPosition;
-
+        //Reference of the camera
     [SerializeField]
     GameObject m_MainCamera;
 
-
+    //Start singleton
     public static Manager_Input Instance;
 
    
@@ -26,11 +29,14 @@ public class Manager_Input : MonoBehaviour {
 
         Manager_Input.Instance = this;
     }
-
-    //Mouse input + raycast + checker les tags
+    //End singleton
 
     private void Update()
     {
+        /*If the player left click the manager launches a raycast from the camera. If the raycast hits something it returns the gameobject.
+        We check the gameobject's tag. If it's an obstacle (turret or roadblock) it's the new target for the vehicle.
+        If it's not an obstacle, we get the hit point and use it as the new position for the camera, and call the function to move it.
+        */
         if(Input.GetMouseButtonUp(0))
         {
             Ray _ray = Camera.main.ScreenPointToRay(Input.mousePosition);

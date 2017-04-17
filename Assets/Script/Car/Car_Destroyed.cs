@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Car_Destroyed : StateMachineBehaviour {
-
+        //The gameobject to be destroyed
     GameObject m_Vehicle;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
@@ -19,6 +19,7 @@ public class Car_Destroyed : StateMachineBehaviour {
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+            //The function used to remove the vehicle from the game manager list is called before destroying the vehicle
         Manager_Objects.Instance.RemoveVehicle(m_Vehicle);
         Destroy(m_Vehicle);
     }
@@ -33,6 +34,7 @@ public class Car_Destroyed : StateMachineBehaviour {
     //
     //}
 
+            //this function is used to destroy the right game object
     public void SetVehicle(GameObject _vehicle)
     {
         m_Vehicle = _vehicle;
