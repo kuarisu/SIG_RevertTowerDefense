@@ -25,7 +25,6 @@ public class Manager_Input : MonoBehaviour {
         }
 
         Manager_Input.Instance = this;
-        DontDestroyOnLoad(this.gameObject);
     }
 
     //Mouse input + raycast + checker les tags

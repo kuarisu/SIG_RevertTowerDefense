@@ -20,7 +20,6 @@ public class Manager_Objects : MonoBehaviour {
         }
 
         Manager_Objects.Instance = this;
-        DontDestroyOnLoad(this.gameObject);
     }
 
     public void AddVehicle(GameObject _vehicle)

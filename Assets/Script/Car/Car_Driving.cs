@@ -14,6 +14,7 @@ public class Car_Driving : StateMachineBehaviour {
     bool m_HasArrivedDestination;
     float m_DistanceToDestination;
     bool m_IsClose = false;
+    bool m_AtEndPoint = false;
 
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
@@ -30,7 +31,12 @@ public class Car_Driving : StateMachineBehaviour {
         m_Agent.destination = m_TargetPosition.position;
         m_DistanceToDestination = Vector3.Distance(m_TargetPosition.position, m_Agent.transform.position);
 
-        if (m_DistanceToDestination < 5)
+        if(m_indexOfNextTarget == m_ListOfKeyPoints.Count -1)
+        {
+            m_AtEndPoint = true;
+        }
+
+        if (m_DistanceToDestination < 5 && !m_AtEndPoint)
         {
             m_IsClose = true;
             m_indexOfNextTarget++;

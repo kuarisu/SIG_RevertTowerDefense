@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Turret_Management : MonoBehaviour {
 
@@ -28,6 +29,10 @@ public class Turret_Management : MonoBehaviour {
     [SerializeField]
     GameObject m_Bullet;
 
+    [SerializeField]
+    Text m_HPText;
+    string m_HPTextString;
+
     Quaternion m_Orientation;
     Quaternion m_InitialOritention;
     bool m_TurretIsShooting = false;
@@ -39,11 +44,13 @@ public class Turret_Management : MonoBehaviour {
         m_An.GetBehaviour<Turret_Shooting>().SetParameters(m_SpeedRotation, m_DynamicVisual);
         m_An.GetBehaviour<Turret_Iddle>().SetParameters(m_SpeedRotation * 2, m_DynamicVisual);
         m_InitialOritention = m_DynamicVisual.transform.localRotation;
+        m_An.GetBehaviour<Turret_Iddle>().SetOrientation(m_InitialOritention);
+        m_HPText.text = m_HealthPoints.ToString();
     }
 
     private void Update()
     {
-        if(m_ListTargetedVehicle.Count == 1)
+        if(m_ListTargetedVehicle.Count > 0)
         {
             if (m_ListTargetedVehicle[0] == null)
             {
@@ -54,9 +61,12 @@ public class Turret_Management : MonoBehaviour {
                 m_Orientation = Quaternion.LookRotation(m_ListTargetedVehicle[0].transform.localPosition - transform.localPosition);
 
                 if (m_Orientation.eulerAngles.y >= m_InitialOritention.eulerAngles.y - 45 && m_Orientation.eulerAngles.y <= m_InitialOritention.eulerAngles.y + 45)
-                {     
-                    if(!m_TurretIsShooting)
+                {
+                    if (!m_TurretIsShooting)
+                    {
+                        m_TurretIsShooting = true;
                         StartShootingBehavior();
+                    }
 
                     m_An.GetBehaviour<Turret_Shooting>().SetOrientation(m_Orientation);
                     
@@ -116,16 +126,21 @@ public class Turret_Management : MonoBehaviour {
     void RemoveFromList(GameObject _gameObject)
     {
         int _i = 0;
+
         foreach (GameObject Vehicle in m_ListTargetedVehicle.ToArray())
         {
-            if (_gameObject.transform.root.name == Vehicle.transform.name)
+            if(_gameObject == null ||Vehicle == null)
+            {
+                break;
+            }
+
+            if ( _gameObject.transform.root.name == Vehicle.transform.name)
             {
                 m_ListTargetedVehicle.RemoveAt(_i);
 
                 if (m_ListTargetedVehicle.Count == 0)
                 {
                     StartIddleBehavior();
-                   // m_TurretIsShooting = false;
                 }
                 break;
             }
@@ -140,6 +155,8 @@ public class Turret_Management : MonoBehaviour {
     public void LooseHealthPoint()
     {
         m_HealthPoints--;
+        m_HPText.text = m_HealthPoints.ToString();
+
         if (m_HealthPoints <= 0)
             StartDestroyedBehavior();
 

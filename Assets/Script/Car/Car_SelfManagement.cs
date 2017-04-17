@@ -127,7 +127,6 @@ public class Car_SelfManagement : MonoBehaviour {
 
     public void PrepareShooting()
     {
-        Debug.Log("hello");
         if(Vector3.Distance(this.transform.position, Manager_Input.Instance.m_Target.transform.position) < m_DistanceToTarget)
         {
             Vector3 _Direction = this.transform.position - Manager_Input.Instance.m_Target.transform.position;
