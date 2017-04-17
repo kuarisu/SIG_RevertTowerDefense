@@ -186,10 +186,13 @@ public class Turret_Management : MonoBehaviour {
         //This coroutine is used to instantiate bullets as long as the turret is shooting. The delay are used to synch it with the animation.
     IEnumerator InstantiateBullet()
     {
+        int i = 0;
         while(m_TurretIsShooting)
         {
             yield return new WaitForSeconds(0.368f);
             GameObject _bullet = (GameObject)Instantiate(m_Bullet, m_BulletSpawner.transform.position, m_DynamicVisual.transform.localRotation);
+            _bullet.name = "Bullet_" + i;
+            i++;
             yield return new WaitForSeconds(0.63f);
         }
         yield break;

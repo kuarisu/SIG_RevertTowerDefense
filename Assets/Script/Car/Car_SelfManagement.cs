@@ -34,8 +34,6 @@ public class Car_SelfManagement : MonoBehaviour {
  
         //The bool used to check if the car is already shooting or not.
     bool m_IsShooting = false;
-        //The bool used to check if the car has already a target or not
-    bool m_HasTarget;
         //The Quaternion use to set the rotation of the vehicle when targeting an obstacle
     Quaternion m_Orientation;
 
@@ -65,22 +63,21 @@ public class Car_SelfManagement : MonoBehaviour {
 
     private void Update()
     {
-        /*First, we check if the vehicle is shooting and if it has no target
+        /*First, we check if the vehicle is shooting, if the target is in the world and if the vehicle is close enough.
         If so, we set the orientation that will be used to rotate the vehicle toward its target.
-        Then we send this orientation to the state machine to will do the rotation.
+        Then we send this orientation to the state machine to do the rotation.
         The vehicle has now a target and can't change it until it's destroyed
 
-        If the vehicle is shooting and already has a target, we check if this target is no longer in the world.
+        If the vehicle is shooting, we check if this target is no longer in the world.
         When it's null, it means the target has been destroyed. If so, the vehicle can go back to its driving behavior.
         */
-        if(m_IsShooting && !m_HasTarget)
+        if(m_IsShooting && Manager_Input.Instance.m_Target != null &&(Vector3.Distance(this.transform.position, Manager_Input.Instance.m_Target.transform.position) < m_DistanceToTarget))
         {
             m_Orientation = Quaternion.LookRotation(Manager_Input.Instance.m_Target.transform.position - transform.position);
             m_An.GetBehaviour<Car_Shooting>().SetOrientation(m_Orientation);
-            m_HasTarget = true;
         }
 
-        else if(m_IsShooting && m_HasTarget && Manager_Input.Instance.m_Target == null)
+        else if(m_IsShooting && Manager_Input.Instance.m_Target == null)
         {
             DrivingBehavior();
         }
@@ -105,7 +102,7 @@ public class Car_SelfManagement : MonoBehaviour {
 
         /*This function is used to start the driving behavior. It will set all the bool required to change the state of the state machine.
          
-        When the vehicle is driving, it's not shooting, the agent is moving, its speed is the one set in inspector and it doesn't have target*/
+        When the vehicle is driving, it's not shooting, the agent is moving, its speed is the one set in inspector.*/
     public void DrivingBehavior()           
     {
         m_An.SetBool("m_Destroyed", false);
@@ -115,8 +112,6 @@ public class Car_SelfManagement : MonoBehaviour {
         m_IsShooting = false;
         m_Agent.isStopped = false;
         m_Agent.speed = m_DrivingSpeed;
-        m_HasTarget = false;
-
 
     }
 
@@ -129,10 +124,15 @@ public class Car_SelfManagement : MonoBehaviour {
         m_An.SetBool("m_Firing", true);
         m_An.SetBool("m_Driving", false);
 
-        m_IsShooting = true;
+
         m_Agent.velocity = Vector3.zero;
         m_Agent.isStopped = true;
-        StartCoroutine(InstantiateBullet());
+        if (!m_IsShooting)
+        {
+            m_IsShooting = true;
+            StartCoroutine(InstantiateBullet());
+        }
+
     }
 
     /*This function is used to start the destruction behavior. It will set all the bool required to change the state of the state machine
@@ -167,14 +167,14 @@ public class Car_SelfManagement : MonoBehaviour {
 
         /* This function is used to do several check before starting the firing behavior.
         We check if the distance between the vehicle and the target is small enough to fire
-        If so, we check if the vehicle is behind the turret and if it's not already shooting*/
+        If so, we check if the vehicle is behind the turret*/
     public void PrepareShooting()
     {
         if(Vector3.Distance(this.transform.position, Manager_Input.Instance.m_Target.transform.position) < m_DistanceToTarget)
         {
             Vector3 _Direction = this.transform.position - Manager_Input.Instance.m_Target.transform.position;
 
-            if (Vector3.Dot(Manager_Input.Instance.m_Target.transform.forward, _Direction) < 0 && !m_IsShooting)
+            if (Vector3.Dot(Manager_Input.Instance.m_Target.transform.forward, _Direction) < 0)
             {
                 FiringBehavior();
             }
